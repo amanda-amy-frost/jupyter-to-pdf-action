@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-converter-action:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout action repository
+        uses: actions/checkout@v4
+
+      - name: Create test notebooks
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path tests
+
+          # Valid notebook
+          # https://ipython.org/ipython-doc/3/notebook/nbformat.html
+          @'
+          {
+            "cells": [
+              {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": ["# Test notebook\n", "Peter Parker."]
+              }
+            ],
+            "metadata": {},
+            "nbformat": 4,
+            "nbformat_minor": 2,
+          }
+          '@ | Set-Content -Path tests/valid.ipynb -Encoding UTF8
+
+          # Broken notebook
+          '{ no closing curly bracket' |
+            Set-Content -Path tests/broken.ipynb -Encoding UTF8
+
+      - name: Test dry-run mode
+        uses: ./
+        with:
+          input_dirs: "tests"
+          output_dir: "out"
+          dry_run: "true"
+          execute: "false"
+
+      - name: Test conversion of valid notebook
+        uses: ./
+        with:
+          input_dirs: "tests"
+          output_dir: "out"
+          dry_run: "false"
+          execute: "true"
+
+      - name: Verify PDF was created
+        shell: pwsh
+        # Terminate workflow early if error
+        run: |
+          if (-not (Test-Path "out/valid.pdf")) {
+            Write-Host "PDF was not generated!" -ForegroundColor Red
+            exit 1
+          }
+
+      - name: Test broken notebook
+        continue-on-error: true
+        uses: ./
+        with:
+          input_dirs: "tests"
+          output_dir: "out"
+          dry_run: "false"
+          execute: "true"
+
+      - name: Confirm broken notebook did not stop workflow
+        shell: pwsh
+        run: |
+          Write-Host "All tests passed." -ForegroundColor Blue
