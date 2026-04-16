@@ -57,5 +57,5 @@ jobs:
               github.repository_owner,
               github.event.repository.name,
               steps.vars.outputs.VERSION) || null) }}
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/jupyter-to-pdf:cache
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/jupyter-to-pdf:cache,mode=max
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:cache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:cache,mode=max
