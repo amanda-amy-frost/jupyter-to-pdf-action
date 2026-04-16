@@ -1,8 +1,5 @@
 name: "Jupyter Notebook to PDF"
 description: "Convert Jupyter notebooks to PDF using nbconvert and LaTeX backend"
-runs:
-  using: "docker"
-  image: "Dockerfile"
 
 inputs:
   input_dirs:
@@ -21,3 +18,7 @@ inputs:
     description: "If true, run the notebooks before converting them."
     required: false
     default: "true"
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
