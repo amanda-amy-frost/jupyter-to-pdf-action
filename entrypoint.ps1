@@ -63,15 +63,6 @@ if (-not (Test-Path $OutputDir)) {
 foreach ($Book in $Notebooks) {
     Write-Host "Processing: $Book"
 
-    # Validate JSON before conversion
-    # Do this in particular so the CI test can succeed
-    try {
-        Get-Content $Book -Raw | ConvertFrom-Json | Out-Null
-    } catch {
-        Write-Warning "Skipping invalid notebook (JSON parse failed): $Book"
-        continue # Go immediately to next book
-    }
-
     if ($ExecBook) {
         $ExecFlag = "--execute"
     } else {
