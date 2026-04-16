@@ -1,31 +1,32 @@
 Write-Host "=== Jupyter PDF Conversion Action ===" -ForegroundColor Blue
-Write-Host "Input directories: $env:INPUT_DIRS"
-Write-Host "Output directory: $env:OUTPUT_DIR"
-Write-Host "Dry run: $env:DRY_RUN"
-Write-Host "Execute notebooks: $env:EXECUTE"
+Write-Host "Input directories: $env:INPUT_INPUT_DIRS"
+Write-Host "Output directory: $env:INPUT_OUTPUT_DIR"
+Write-Host "Dry run: $env:INPUT_DRY_RUN"
+Write-Host "Execute notebooks: $env:INPUT_EXECUTE"
 Write-Host "=====================================" -ForegroundColor Blue
 
 # Normalize booleans
-$DryRun = $env:DRY_RUN.ToLower() -eq "true"
-$ExecBook = $env:EXECUTE.ToLower() -eq "true"
+$DryRun = $env:INPUT_DRY_RUN.ToLower() -eq "true"
+$ExecBook = $env:INPUT_EXECUTE.ToLower() -eq "true"
+$InputDirs = $env:INPUT_INPUT_DIRS
 
 # Default output directory
-if (-not $env:OUTPUT_DIR) {
+if (-not $env:INPUT_OUTPUT_DIR) {
     $OutputDir = "pdf"
 } else {
-    $OutputDir = $env:OUTPUT_DIR
+    $OutputDir = $env:INPUT_OUTPUT_DIR
 }
 
 # Determine notebook list
 $Notebooks = @()
 
-if ([string]::IsNullOrWhiteSpace($env:INPUT_DIRS)) {
+if ([string]::IsNullOrWhiteSpace($InputDirs)) {
     Write-Host "Searching entire repository for notebooks..."
     $Notebooks = Get-ChildItem -Recurse -Filter *.ipynb |
         Select-Object -ExpandProperty FullName
 } else {
     Write-Host "Searching in specified directories..."
-    $Directories = $env:INPUT_DIRS -split ","
+    $Directories = $InputDirs -split ","
     foreach ($Dir in $Directories) {
         if (Test-Path $Dir) {
             $FoundBooks = Get-ChildItem -Recurse -Path $Dir -Filter *.ipynb |
