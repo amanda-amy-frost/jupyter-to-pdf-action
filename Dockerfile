@@ -4,8 +4,8 @@ FROM python:3.12-slim
 
 # Install nbconvert dependencies and prereqs for PowerShell (wget)
 # https://nbconvert.readthedocs.io/en/latest/install.html
-RUN apt update && \
-    apt install -y \
+RUN apt-get update && \
+    apt-get install -y \
         pandoc \
         texlive \
         texlive-xetex \
@@ -13,16 +13,15 @@ RUN apt update && \
         texlive-plain-generic \
         texlive-latex-extra \
         wget && \
-    apt clean && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install PowerShell
-# https://learn.microsoft.com/en-us/powershell/scripting/install/install-debian
-RUN wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb && \
-    dpkg -i packages-microsoft-prod.deb && \
-    rm packages-microsoft-prod.deb && \
-    apt update && \
-    apt install -y powershell && \
+# Install PowerShell directly from GitHub - Microsoft's install method is unstable
+ARG POWERSHELL_VERSION=7.6.0
+RUN wget -q https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell_${POWERSHELL_VERSION}-1.deb_amd64.deb && \
+    apt-get update && \
+    apt-get install -y ./powershell_${POWERSHELL_VERSION}-1.deb_amd64.deb && \
+    rm powershell_${POWERSHELL_VERSION}-1.deb_amd64.deb && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Jupyter and nbconvert
