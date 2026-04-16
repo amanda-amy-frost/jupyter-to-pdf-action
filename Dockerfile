@@ -12,6 +12,8 @@ RUN apt-get update && \
         texlive-fonts-recommended \
         texlive-plain-generic \
         texlive-latex-extra \
+        texlive-fonts-extra \
+        inkscape \
         wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
