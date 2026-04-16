@@ -1,0 +1,23 @@
+name: "Jupyter Notebook to PDF"
+description: "Convert Jupyter notebooks to PDF using nbconvert and LaTeX backend"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+
+inputs:
+  input_dirs:
+    description: "Comma-separated list of directories to search for .ipynb files (recursive). Empty list means search entire repo."
+    required: false
+    default: ""
+  output_dir:
+    description: "Directory where PDFs will be saved."
+    required: false
+    default: "pdf"
+  dry_run:
+    description: "If true, list the notebooks but do not execute or convert them."
+    required: false
+    default: "false"
+  execute:
+    description: "If true, run the notebooks before converting them."
+    required: false
+    default: "true"
