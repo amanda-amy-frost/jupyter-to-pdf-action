@@ -6,11 +6,10 @@ Write-Host "Execute notebooks: $env:INPUT_EXECUTE"
 Write-Host "Packages: $env:INPUT_PACKAGES"
 Write-Host "=====================================" -ForegroundColor Blue
 
-# Normalize booleans
 $DryRun = $env:INPUT_DRY_RUN.ToLower() -eq "true"
 $ExecBook = $env:INPUT_EXECUTE.ToLower() -eq "true"
+$Packages = $env:INPUT_PACKAGES -split '\s+'
 $InputDirs = $env:INPUT_INPUT_DIRS
-$Packages = $env:INPUT_PACKAGES
 
 # Default output directory
 if (-not $env:INPUT_OUTPUT_DIR) {
