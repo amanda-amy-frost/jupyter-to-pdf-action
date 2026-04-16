@@ -27,8 +27,8 @@ All inputs are strings and are optional.
 - `execute`:
   - If true, run the notebooks before converting them.
   - Default: `"true"`
--  requirements:
-  - Path to requirements.txt file for pip to install before running notebooks.
+-  packages:
+  - Space-separated list of Python packages to install with pip.
   - Default: `""`
 
 ### Example workflow
@@ -57,9 +57,10 @@ jobs:
       - name: Convert notebooks
         uses: amanda-amy-frost/jupyter-to-pdf-action@v1
         with:
+          dry_run: ${{ env.DRY_RUN }}
           input_dirs: "scripts"
           output_dir: "."
-          dry_run: ${{ env.DRY_RUN }}
+          packages: "polars altair"
 
       - name: Commit PDF back to repo
         if: ${{ env.DRY_RUN == 'false' }}

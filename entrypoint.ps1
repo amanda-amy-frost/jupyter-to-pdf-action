@@ -3,13 +3,14 @@ Write-Host "Input directories: $env:INPUT_INPUT_DIRS"
 Write-Host "Output directory: $env:INPUT_OUTPUT_DIR"
 Write-Host "Dry run: $env:INPUT_DRY_RUN"
 Write-Host "Execute notebooks: $env:INPUT_EXECUTE"
-Write-Host "Input requirements path: $env:INPUT_REQUIREMENTS"
+Write-Host "Packages: $env:INPUT_PACKAGES"
 Write-Host "=====================================" -ForegroundColor Blue
 
 # Normalize booleans
 $DryRun = $env:INPUT_DRY_RUN.ToLower() -eq "true"
 $ExecBook = $env:INPUT_EXECUTE.ToLower() -eq "true"
 $InputDirs = $env:INPUT_INPUT_DIRS
+$Packages = $env:INPUT_PACKAGES
 
 # Default output directory
 if (-not $env:INPUT_OUTPUT_DIR) {
@@ -18,10 +19,12 @@ if (-not $env:INPUT_OUTPUT_DIR) {
     $OutputDir = $env:INPUT_OUTPUT_DIR
 }
 
-if ($env:INPUT_REQUIREMENTS -and (Test-Path $env:INPUT_REQUIREMENTS)) {
-    Write-Host "Installing Python dependencies from $env:INPUT_REQUIREMENTS"
-    pip install -r $env:INPUT_REQUIREMENTS
+
+if ($Packages) {
+    Write-Host "Installing Python packages: $Packages" -ForegroundColor Green
+    pip install $Packages
 }
+
 
 # Determine notebook list
 $Notebooks = @()
