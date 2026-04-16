@@ -30,7 +30,7 @@ jobs:
             ],
             "metadata": {},
             "nbformat": 4,
-            "nbformat_minor": 2,
+            "nbformat_minor": 2
           }
           '@ | Set-Content -Path tests/valid.ipynb -Encoding UTF8
 
